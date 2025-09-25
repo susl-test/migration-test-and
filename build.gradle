@@ -1,0 +1,72 @@
+plugins {
+    id 'com.android.library'
+    id 'maven-publish'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    compileSdk 35
+
+    defaultConfig {
+        minSdk 21
+        targetSdk 35
+        versionCode 35
+        versionName "0.0.4"
+    }
+
+    buildTypes {
+        release {
+            // We are not minifying, since we have prebuilt AAR
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
+    namespace 'com.migration.test'
+
+    buildFeatures {
+        buildConfig true
+    }
+}
+
+// Task to copy prebuilt AAR into build outputs
+task copyPrebuiltAar(type: Copy) {
+    from 'libs'
+    into "$buildDir/outputs/aar"
+}
+
+// Make assemble depend on it
+assemble.dependsOn copyPrebuiltAar
+
+// Maven publishing configuration
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                groupId = 'com.migration.test'
+                artifactId = 'migration-android-sdk'
+                version = android.defaultConfig.versionName
+                artifact("$buildDir/outputs/aar/migration-android-sdk-${version}.aar")
+            }
+        }
+    }
+}
+
+repositories {
+    google()
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'androidx.core:core-ktx:1.15.0'
+    implementation 'androidx.webkit:webkit:1.12.1'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+}
