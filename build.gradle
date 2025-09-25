@@ -1,80 +1,15 @@
-apply plugin: 'com.android.library'
-apply plugin: 'org.jetbrains.kotlin.android'
 apply plugin: 'maven-publish'
 
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath "com.android.tools.build:gradle:8.1.0"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.10"
-    }
-}
-
-// Путь к твоему AAR в libs/
+// Путь к готовому AAR
 def aarFile = file("$projectDir/libs/sdk-android.aar")
 
-android {
-    compileSdk 35
-
-    defaultConfig {
-        minSdk 21
-        targetSdk 35
-        versionCode 35
-        versionName "0.0.8"
-    }
-
-    buildTypes {
-        release {
-            // Не минифицируем, так как используем предсобранный AAR
-            minifyEnabled false
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        jvmTarget = '17'
-    }
-
-    namespace 'com.migration.test'
-
-    buildFeatures {
-        buildConfig true
-    }
-}
-
-repositories {
-    google()
-    mavenCentral()
-}
-
-dependencies {
-    implementation 'androidx.core:core-ktx:1.15.0'
-    implementation 'androidx.webkit:webkit:1.12.1'
-    implementation 'androidx.appcompat:appcompat:1.7.1'
-}
-
-// Maven publishing для JitPack
 publishing {
     publications {
         release(MavenPublication) {
             groupId = 'com.migration.test'
             artifactId = 'migration-android-sdk'
-            version = android.defaultConfig.versionName
-
-            // Берем AAR прямо из папки libs
-            artifact(aarFile) {
-                builtBy tasks.named('assembleRelease') // оставляем для корректного порядка
-            }
+            version = '0.0.9'
+            artifact(aarFile)
         }
-    }
-    repositories {
-        mavenLocal() // JitPack использует mavenLocal
     }
 }
