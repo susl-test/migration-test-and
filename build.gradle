@@ -1,6 +1,6 @@
 apply plugin: 'maven-publish'
 
-def sdkVersion = '0.0.21'
+def sdkVersion = '0.0.22'
 def aarFile = file("${projectDir}/libs/sdk-${sdkVersion}.aar")
 
 tasks.register("assemble")
@@ -42,5 +42,18 @@ publishing {
             }
         }
     }
+}
 
+afterEvaluate {
+    publishing.publications.withType(MavenPublication).all { pub ->
+        def genTask = tasks.register("generateModuleFor${pub.name.capitalize()}") {
+            doLast {
+                pub.generateMetadataFileForMavenPublication()
+            }
+        }
+
+        tasks.withType(PublishToMavenRepository).configureEach {
+            dependsOn(genTask)
+        }
+    }
 }
