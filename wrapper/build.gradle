@@ -44,6 +44,8 @@ android {
 
 def aarFile = file("../libs/sdk-${sdkVersion}.aar")
 
+def releaseAar = file("$projectDir/build/outputs/aar/wrapper-release.aar")
+
 afterEvaluate {
     publishing {
         publications {
@@ -53,12 +55,15 @@ afterEvaluate {
                 version = sdkVersion
 
                 from components.release
+                artifact(releaseAar) {
+                    builtBy tasks.named("replaceReleaseAar")
+                    extension = 'aar'
+                    classifier = ''
+                }
             }
         }
     }
 }
-
-def releaseAar = file("$projectDir/build/outputs/aar/wrapper-release.aar")
 
 tasks.register("replaceReleaseAar") {
     dependsOn tasks.named("assembleRelease")
