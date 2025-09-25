@@ -16,25 +16,45 @@ android {
         targetSdk 35
         versionCode 1
         versionName sdkVersion
-        namespace 'com.inbrain.wrapper'
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
         }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
+    publishing {
+        singleVariant("release") {
+        }
+    }
+    namespace 'com.inbrain.wrapper'
+    buildFeatures {
+        buildConfig true
     }
 }
 
-def aarFile = file("../libs/sdk-${sdkVersion}.aar")
+//def aarFile = file("../libs/sdk-${sdkVersion}.aar")
 
-publishing {
-    publications {
-        release(MavenPublication) {
-            groupId 'com.github.inbrainai'
-            artifactId 'sdk-android'
-            version = sdkVersion
-            artifact(aarFile)
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId 'com.github.inbrainai'
+                artifactId 'sdk-android'
+                version = sdkVersion
+//            artifact(aarFile)
+            }
         }
     }
 }
