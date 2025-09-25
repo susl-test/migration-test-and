@@ -14,9 +14,8 @@ publishing {
             version = sdkVersion
             artifact(aarFile)
         }
-    }
 
-    // TODO: Read from collocated POM
+            // TODO: Read from collocated POM
     pom.withXml {
         def dependenciesNode = asNode().appendNode('dependencies')
         
@@ -42,5 +41,5 @@ publishing {
         }
                 
     }
-
+    }
 }
