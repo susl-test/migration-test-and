@@ -42,18 +42,17 @@ android {
     }
 }
 
-//def aarFile = file("../libs/sdk-${sdkVersion}.aar")
-
+def aarFile = file("../libs/sdk-${sdkVersion}.aar")
 
 afterEvaluate {
     publishing {
         publications {
             release(MavenPublication) {
-                from components.release
+//                from components.release
                 groupId 'com.github.inbrainai'
                 artifactId 'sdk-android'
                 version = sdkVersion
-//            artifact(aarFile)
+                artifact(aarFile)
             }
         }
     }
