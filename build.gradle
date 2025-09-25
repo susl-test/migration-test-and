@@ -1,3 +1,7 @@
+apply plugin: 'com.android.library'
+apply plugin: 'org.jetbrains.kotlin.android'
+apply plugin: 'maven-publish'
+
 buildscript {
     repositories {
         google()
@@ -9,9 +13,8 @@ buildscript {
     }
 }
 
-apply plugin: 'com.android.library'
-apply plugin: 'org.jetbrains.kotlin.android'
-apply plugin: 'maven-publish'
+// Путь к твоему AAR в libs/
+def aarFile = file("$projectDir/libs/sdk-android.aar")
 
 android {
     compileSdk 35
@@ -20,12 +23,12 @@ android {
         minSdk 21
         targetSdk 35
         versionCode 35
-        versionName "0.0.4"
+        versionName "0.0.8"
     }
 
     buildTypes {
         release {
-            // We are not minifying, since we have prebuilt AAR
+            // Не минифицируем, так как используем предсобранный AAR
             minifyEnabled false
         }
     }
@@ -46,29 +49,6 @@ android {
     }
 }
 
-// Task to copy prebuilt AAR into build outputs
-task copyPrebuiltAar(type: Copy) {
-    from 'libs'
-    into "$buildDir/outputs/aar"
-}
-
-// Make assemble depend on it
-assemble.dependsOn copyPrebuiltAar
-
-// Maven publishing configuration
-afterEvaluate {
-    publishing {
-        publications {
-            release(MavenPublication) {
-                groupId = 'com.migration.test'
-                artifactId = 'migration-android-sdk'
-                version = android.defaultConfig.versionName
-                artifact("$buildDir/outputs/aar/migration-android-sdk-${version}.aar")
-            }
-        }
-    }
-}
-
 repositories {
     google()
     mavenCentral()
@@ -78,4 +58,23 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.15.0'
     implementation 'androidx.webkit:webkit:1.12.1'
     implementation 'androidx.appcompat:appcompat:1.7.1'
+}
+
+// Maven publishing для JitPack
+publishing {
+    publications {
+        release(MavenPublication) {
+            groupId = 'com.migration.test'
+            artifactId = 'migration-android-sdk'
+            version = android.defaultConfig.versionName
+
+            // Берем AAR прямо из папки libs
+            artifact(aarFile) {
+                builtBy tasks.named('assembleRelease') // оставляем для корректного порядка
+            }
+        }
+    }
+    repositories {
+        mavenLocal() // JitPack использует mavenLocal
+    }
 }
