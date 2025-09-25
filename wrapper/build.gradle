@@ -48,11 +48,17 @@ afterEvaluate {
     publishing {
         publications {
             release(MavenPublication) {
-//                from components.release
                 groupId 'com.github.inbrainai'
                 artifactId 'sdk-android'
                 version = sdkVersion
-                artifact(aarFile)
+
+                from components.release
+                artifact(aarFile) {
+                    builtBy tasks.named("assembleRelease")
+                    extension = 'aar'
+                    classifier = ''
+                }
+
             }
         }
     }
