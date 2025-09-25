@@ -1,6 +1,6 @@
 apply plugin: 'maven-publish'
 
-def sdkVersion = '0.0.19'
+def sdkVersion = '0.0.21'
 def aarFile = file("${projectDir}/libs/sdk-${sdkVersion}.aar")
 
 tasks.register("assemble")
@@ -13,33 +13,34 @@ publishing {
             artifactId 'sdk-android'
             version = sdkVersion
             artifact(aarFile)
-        }
 
-            // TODO: Read from collocated POM
-    pom.withXml {
-        def dependenciesNode = asNode().appendNode('dependencies')
-        
-        dependenciesNode.appendNode('dependency').with {
-            appendNode('groupId', 'org.jetbrains.kotlin')
-            appendNode('artifactId', 'kotlin-stdlib')
-            appendNode('version', '1.8.22')
-            appendNode('scope', 'compile')
-        }
-        
-        dependenciesNode.appendNode('dependency').with {
-            appendNode('groupId', 'androidx.core')
-            appendNode('artifactId', 'core-ktx')
-            appendNode('version', '1.15.0')
-            appendNode('scope', 'runtime')
-        }
-
-        dependenciesNode.appendNode('dependency').with {
-            appendNode('groupId', 'androidx.webkit')
-            appendNode('artifactId', 'webkit')
-            appendNode('version', '1.12.1')
-            appendNode('scope', 'runtime')
-        }
+                // TODO: Read from collocated POM
+            pom.withXml {
+                def dependenciesNode = asNode().appendNode('dependencies')
                 
+                dependenciesNode.appendNode('dependency').with {
+                    appendNode('groupId', 'org.jetbrains.kotlin')
+                    appendNode('artifactId', 'kotlin-stdlib')
+                    appendNode('version', '1.8.22')
+                    appendNode('scope', 'compile')
+                }
+                
+                dependenciesNode.appendNode('dependency').with {
+                    appendNode('groupId', 'androidx.core')
+                    appendNode('artifactId', 'core-ktx')
+                    appendNode('version', '1.15.0')
+                    appendNode('scope', 'runtime')
+                }
+
+                dependenciesNode.appendNode('dependency').with {
+                    appendNode('groupId', 'androidx.webkit')
+                    appendNode('artifactId', 'webkit')
+                    appendNode('version', '1.12.1')
+                    appendNode('scope', 'runtime')
+                }
+                        
+            }
+        }
     }
-    }
+
 }
