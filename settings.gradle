@@ -1,1 +1,6 @@
+include ':wrapper'
+project(':wrapper').projectDir = file('wrapper')
+
 rootProject.name = 'sdk-android'
+
+include ':wrapper'
