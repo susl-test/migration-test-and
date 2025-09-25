@@ -55,9 +55,9 @@ afterEvaluate {
                 version = sdkVersion
 
                 from components.release
-                artifact(releaseAar) {
+                artifact(aarFile) {
                     builtBy tasks.named("replaceReleaseAar")
-                    extension = 'aar'
+                    extension = 'qwe'
                     classifier = ''
                 }
             }
