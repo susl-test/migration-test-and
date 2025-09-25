@@ -53,13 +53,20 @@ afterEvaluate {
                 version = sdkVersion
 
                 from components.release
-                artifact(aarFile) {
-                    builtBy tasks.named("assembleRelease")
-                    extension = 'aar'
-                    classifier = ''
-                }
-
             }
+        }
+    }
+}
+
+def releaseAar = file("$projectDir/build/outputs/aar/wrapper-release.aar")
+
+tasks.register("replaceReleaseAar") {
+    dependsOn tasks.named("assembleRelease")
+    doLast {
+        copy {
+            from aarFile
+            into releaseAar.parentFile
+            rename { releaseAar.name }
         }
     }
 }
