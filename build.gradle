@@ -1,6 +1,6 @@
 apply plugin: 'maven-publish'
 
-def sdkVersion = '0.0.12'
+def sdkVersion = '0.0.13'
 def aarFile = file("${projectDir}/libs/sdk-${sdkVersion}.aar")
 
 tasks.register("assemble")
@@ -9,8 +9,8 @@ tasks.register("build")
 publishing {
     publications {
         release(MavenPublication) {
-            groupId 'com.github.susl-test'
-            artifactId 'migration-test-and'
+            groupId 'com.github.inbrainai'
+            artifactId 'sdk-android'
             version = sdkVersion
             artifact(aarFile)
         }
