@@ -1,7 +1,6 @@
-apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 
-def sdkVersion = '0.0.23'
+def sdkVersion = '0.0.24'
 def aarFile = file("${projectDir}/libs/sdk-${sdkVersion}.aar")
 
 android {
