@@ -1,10 +1,36 @@
+apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 
-def sdkVersion = '0.0.22'
+def sdkVersion = '0.0.23'
 def aarFile = file("${projectDir}/libs/sdk-${sdkVersion}.aar")
 
-tasks.register("assemble")
-tasks.register("build")
+android {
+    compileSdk 35
+
+    defaultConfig {
+        minSdk 21
+        targetSdk 35
+        versionCode 1
+        versionName sdkVersion
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
+    namespace 'com.inbrain.sdk'
+}
 
 publishing {
     publications {
@@ -13,47 +39,12 @@ publishing {
             artifactId 'sdk-android'
             version = sdkVersion
             artifact(aarFile)
-
-                // TODO: Read from collocated POM
-            pom.withXml {
-                def dependenciesNode = asNode().appendNode('dependencies')
-                
-                dependenciesNode.appendNode('dependency').with {
-                    appendNode('groupId', 'org.jetbrains.kotlin')
-                    appendNode('artifactId', 'kotlin-stdlib')
-                    appendNode('version', '1.8.22')
-                    appendNode('scope', 'compile')
-                }
-                
-                dependenciesNode.appendNode('dependency').with {
-                    appendNode('groupId', 'androidx.core')
-                    appendNode('artifactId', 'core-ktx')
-                    appendNode('version', '1.15.0')
-                    appendNode('scope', 'runtime')
-                }
-
-                dependenciesNode.appendNode('dependency').with {
-                    appendNode('groupId', 'androidx.webkit')
-                    appendNode('artifactId', 'webkit')
-                    appendNode('version', '1.12.1')
-                    appendNode('scope', 'runtime')
-                }
-                        
-            }
         }
     }
 }
 
-afterEvaluate {
-    publishing.publications.withType(MavenPublication).all { pub ->
-        def genTask = tasks.register("generateModuleFor${pub.name.capitalize()}") {
-            doLast {
-                pub.generateMetadataFileForMavenPublication()
-            }
-        }
-
-        tasks.withType(PublishToMavenRepository).configureEach {
-            dependsOn(genTask)
-        }
-    }
+dependencies {
+    api "org.jetbrains.kotlin:kotlin-stdlib:1.8.0"
+    api 'androidx.core:core-ktx:1.15.0'
+    api 'androidx.webkit:webkit:1.12.1'
 }
