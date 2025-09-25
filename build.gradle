@@ -1,8 +1,7 @@
 apply plugin: 'maven-publish'
 
-// Путь к готовому AAR
-def version = '0.0.11'
-def aarFile = file("${projectDir}/libs/sdk-${version}.aar")
+def sdkVersion = '0.0.11'
+def aarFile = file("${projectDir}/libs/sdk-${sdkVersion}.aar")
 
 tasks.register("assemble")
 tasks.register("build")
@@ -12,7 +11,7 @@ publishing {
         release(MavenPublication) {
             groupId 'com.github.susl-test'
             artifactId 'migration-test-and'
-            version = $version
+            version = sdkVersion
             artifact(aarFile)
         }
     }
