@@ -3,12 +3,15 @@ apply plugin: 'maven-publish'
 // Путь к готовому AAR
 def aarFile = file("$projectDir/libs/sdk-android.aar")
 
+tasks.register("assemble")
+tasks.register("build")
+
 publishing {
     publications {
         release(MavenPublication) {
             groupId = 'com.migration.test'
             artifactId = 'migration-android-sdk'
-            version = '0.0.9'
+            version = '0.0.10'
             artifact(aarFile)
         }
     }
