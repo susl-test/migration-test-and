@@ -1,6 +1,6 @@
 apply plugin: 'maven-publish'
 
-def sdkVersion = '0.0.15'
+def sdkVersion = '0.0.16'
 def aarFile = file("${projectDir}/libs/sdk-${sdkVersion}.aar")
 
 tasks.register("assemble")
